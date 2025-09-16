@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">My Todo List</h1>
+
+        <!-- Add Todo Form -->
+        <form action="/add" method="POST" class="flex mb-6">
+            <input type="text" name="title" placeholder="Enter a new task"
+                class="flex-1 p-3 border border-gray-300 rounded-l-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+            <button type="submit"
+                class="bg-blue-500 text-white px-6 rounded-r-2xl hover:bg-blue-600 transition duration-200">Add</button>
+        </form>
+
+        <!-- Todo List -->
+        <ul>
+            {% for todo in todos %}
+            <li class="flex justify-between items-center mb-3 p-3 border rounded-2xl shadow-sm hover:shadow-md transition duration-150
+                {% if todo.complete %}bg-green-50{% else %}bg-white{% endif %}">
+
+                {% if edit_id == todo.id %}
+                <!-- Edit Mode -->
+                <form action="/update/{{ todo.id }}" method="POST" class="flex-1 flex items-center space-x-2">
+                    <input type="text" name="title" value="{{ todo.title }}"
+                        class="flex-1 p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent">
+                    <button type="submit"
+                        class="text-green-500 hover:text-green-700 transition duration-200">
+                        ✔
+                    </button>
+                    <a href="/cancel" class="text-red-500 hover:text-red-700 transition duration-200">
+                        ✖
+                    </a>
+                </form>
+                {% else %}
+                <!-- Normal display -->
+                <span class="flex-1 text-gray-800 {% if todo.complete %}line-through text-gray-400{% endif %}">{{ todo.title }}</span>
+                <div class="flex space-x-3 items-center">
+                    <!-- Complete icon -->
+                    <a href="/complete/{{ todo.id }}"
+                        class="text-yellow-500 hover:text-yellow-700 transition duration-200">
+                        ✔
+                    </a>
+                    <!-- Delete icon -->
+                    <a href="/delete/{{ todo.id }}"
+                        class="text-red-500 hover:text-red-700 transition duration-200">
+                        🗑
+                    </a>
+                    <!-- Update icon (Pencil) -->
+                    <a href="/edit/{{ todo.id }}"
+                        class="text-green-500 hover:text-green-700 transition duration-200 text-xl">
+                        ✏
+                    </a>
+                </div>
+                {% endif %}
+
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+
+</html>
